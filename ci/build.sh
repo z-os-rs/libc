@@ -149,6 +149,7 @@ x86_64-pc-windows-gnu \
 x86_64-unknown-illumos \
 x86_64-unknown-linux-gnux32 \
 x86_64-unknown-redox \
+x86_64-unknown-z_os \
 "
 
 RUST_APPLE_TARGETS="\

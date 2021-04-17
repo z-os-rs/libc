@@ -11,7 +11,7 @@ use std::{env, io};
 fn do_cc() {
     let target = env::var("TARGET").unwrap();
     if cfg!(unix) {
-        let exclude = ["redox", "wasi"];
+        let exclude = ["redox", "wasi", "z_os"];
         if !exclude.iter().any(|x| target.contains(x)) {
             let mut cmsg = cc::Build::new();
 
@@ -45,6 +45,7 @@ fn do_ctest() {
         t if t.contains("wasi") => return test_wasi(t),
         t if t.contains("windows") => return test_windows(t),
         t if t.contains("vxworks") => return test_vxworks(t),
+        t if t.contains("z_os") => return test_z_os(t),
         t => panic!("unknown target {}", t),
     }
 }
@@ -609,6 +610,55 @@ fn test_windows(target: &str) {
 
 fn test_redox(target: &str) {
     assert!(target.contains("redox"));
+
+    let mut cfg = ctest_cfg();
+    cfg.flag("-Wno-deprecated-declarations");
+
+    headers! {
+        cfg:
+        "ctype.h",
+        "dirent.h",
+        "dlfcn.h",
+        "errno.h",
+        "fcntl.h",
+        "grp.h",
+        "limits.h",
+        "locale.h",
+        "netdb.h",
+        "netinet/in.h",
+        "netinet/ip.h",
+        "netinet/tcp.h",
+        "poll.h",
+        "pwd.h",
+        "semaphore.h",
+        "string.h",
+        "strings.h",
+        "sys/file.h",
+        "sys/ioctl.h",
+        "sys/mman.h",
+        "sys/ptrace.h",
+        "sys/resource.h",
+        "sys/socket.h",
+        "sys/stat.h",
+        "sys/statvfs.h",
+        "sys/time.h",
+        "sys/types.h",
+        "sys/uio.h",
+        "sys/un.h",
+        "sys/utsname.h",
+        "sys/wait.h",
+        "termios.h",
+        "time.h",
+        "unistd.h",
+        "utime.h",
+        "wchar.h",
+    }
+
+    cfg.generate("../src/lib.rs", "main.rs");
+}
+
+fn test_z_os(target: &str) {
+    assert!(target.contains("z_os"));
 
     let mut cfg = ctest_cfg();
     cfg.flag("-Wno-deprecated-declarations");

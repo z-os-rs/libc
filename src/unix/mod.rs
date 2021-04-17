@@ -1459,6 +1459,9 @@ cfg_if! {
     } else if #[cfg(target_os = "redox")] {
         mod redox;
         pub use self::redox::*;
+    } else if #[cfg(target_os = "z_os")] {
+        mod z_os;
+        pub use self::z_os::*;
     } else {
         // Unknown target_os
     }
