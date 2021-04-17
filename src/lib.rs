@@ -147,6 +147,12 @@ cfg_if! {
 
         mod wasi;
         pub use wasi::*;
+    } else if #[cfg(target_os = "z_os")] {
+        mod fixed_width_ints;
+        pub use fixed_width_ints::*;
+
+        mod z_os;
+        pub use z_os::*;
     } else {
         // non-supported targets: empty...
     }
